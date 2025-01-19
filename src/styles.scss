@@ -1,0 +1,180 @@
+@use '@angular/material' as mat;
+
+// Include the common styles for Angular Material
+@include mat.core();
+
+// Define your theme
+$primary: mat.define-palette(mat.$indigo-palette);
+$accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
+$warn: mat.define-palette(mat.$red-palette);
+
+$theme: mat.define-light-theme((
+  color: (
+    primary: $primary,
+    accent: $accent,
+    warn: $warn,
+  ),
+  typography: mat.define-typography-config(),
+  density: 0,
+));
+
+// Include theme styles for core and each component
+@include mat.all-component-themes($theme);
+
+/* Vous pouvez ajouter d'autres styles globaux ici */
+html, body { 
+  height: 100%; 
+}
+
+body { 
+  margin: 0; 
+  font-family: Roboto, "Helvetica Neue", sans-serif; 
+  background-color: var(--background-light);
+}
+
+/* Vous pouvez ajouter ces variables globales */
+:root {
+  --primary-color: #0a1929;    /* Bleu très foncé */
+  --secondary-color: #ff9800;  /* Orange */
+  --hover-color: #f57c00;      /* Orange foncé */
+  --text-light: #ffffff;
+  --text-dark: #333333;
+  --background-light: #f5f5f5;
+}
+
+/* Styles globaux pour les boutons */
+.btn-primary {
+  background-color: var(--secondary-color) !important;
+  border-color: var(--secondary-color) !important;
+  color: var(--text-light) !important;
+  padding: 0.5rem 1.5rem;
+  border-radius: 25px;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: var(--hover-color) !important;
+    border-color: var(--hover-color) !important;
+    transform: translateY(-1px);
+  }
+}
+
+.btn-outline-primary {
+  color: var(--secondary-color) !important;
+  border-color: var(--secondary-color) !important;
+  background-color: transparent;
+  padding: 0.5rem 1.5rem;
+  border-radius: 25px;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: var(--secondary-color) !important;
+    color: var(--text-light) !important;
+    transform: translateY(-1px);
+  }
+}
+
+/* Navbar */
+.navbar {
+  background-color: var(--primary-color) !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand, .nav-link {
+  color: var(--text-light) !important;
+}
+
+/* Formulaires */
+.form-container {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  margin-top: 2rem;
+}
+
+.form-control {
+  border: 2px solid #e0e0e0;
+  border-radius: 4px;
+  padding: 0.75rem;
+  transition: all 0.3s ease;
+
+  &:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(26, 35, 126, 0.25);
+  }
+}
+
+/* Cards */
+.card {
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+  }
+
+  .card-title {
+    color: var(--primary-color);
+  }
+}
+
+/* Headers */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--primary-color);
+}
+
+/* Liens */
+a {
+  color: var(--secondary-color);
+  text-decoration: none;
+  transition: color 0.3s ease;
+
+  &:hover {
+    color: var(--hover-color);
+  }
+}
+
+/* Alerts */
+.alert-success {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+}
+
+.alert-danger {
+  background-color: #f44336;
+  color: white;
+  border: none;
+}
+
+/* Loading spinner */
+.spinner-border {
+  color: var(--secondary-color);
+}
+
+/* Custom container pour les formulaires */
+.auth-container {
+  max-width: 500px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+
+  h2 {
+    color: var(--primary-color);
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+
+  .btn {
+    width: 100%;
+    margin-top: 1rem;
+  }
+} 

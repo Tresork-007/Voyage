@@ -1,0 +1,52 @@
+<nav class="navbar navbar-expand-lg">
+  <div class="container">
+    <!-- Logo/Nom de l'entreprise -->
+    <a class="navbar-brand me-auto" style="cursor: pointer;" (click)="navigateTo('/')">
+      <i class="bi bi-airplane-fill"></i>
+      <span class="brand-name">VoyageConnect</span>
+    </a>
+
+    <!-- Bouton hamburger pour mobile -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Menu de navigation -->
+    <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
+      <ul class="navbar-nav mx-auto">
+        <li class="nav-item">
+          <a class="nav-link" style="cursor: pointer;" (click)="navigateTo('/')">
+            <i class="bi bi-house-door-fill"></i>
+            <span>Accueil</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" style="cursor: pointer;" (click)="navigateTo('/destinations')">
+            <i class="bi bi-globe-americas"></i>
+            <span>Destinations</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" style="cursor: pointer;" (click)="navigateTo('/contact')">
+            <i class="bi bi-chat-dots-fill"></i>
+            <span>Contact</span>
+          </a>
+        </li>
+      </ul>
+      
+      <!-- Boutons de connexion/inscription -->
+      <div class="auth-buttons">
+        <button type="button" class="btn btn-login" (click)="navigateTo('/login')">
+          <i class="bi bi-box-arrow-in-right"></i>
+          <span>Connexion</span>
+        </button>
+        <button type="button" class="btn btn-signup ms-2" (click)="navigateTo('/signup')">
+          <i class="bi bi-person-plus-fill"></i>
+          <span>Inscription</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</nav>
+  
+  

@@ -1,0 +1,50 @@
+<footer class="footer">
+  <div class="container">
+    <div class="footer-content">
+      <!-- Informations de l'entreprise -->
+      <div class="footer-section">
+        <h5>VoyageConnect</h5>
+        <p><i class="bi bi-geo-alt-fill"></i> Paris, France</p>
+        <p><i class="bi bi-telephone-fill"></i> +33 1 23 45 67 89</p>
+        <p><i class="bi bi-envelope-fill"></i> contact@voyageconnect.com</p>
+      </div>
+
+      <!-- Liens rapides -->
+      <div class="footer-section">
+        <h5>Navigation</h5>
+        <ul>
+          <li><a (click)="navigateTo('/')"><i class="bi bi-house-door"></i> Accueil</a></li>
+          <li><a (click)="navigateTo('/destinations')"><i class="bi bi-globe2"></i> Destinations</a></li>
+          <li><a (click)="navigateTo('/contact')"><i class="bi bi-chat-dots"></i> Contact</a></li>
+        </ul>
+      </div>
+
+      <!-- Réseaux sociaux -->
+      <div class="footer-section">
+        <h5>Suivez-nous</h5>
+        <div class="social-links">
+          <a href="#" target="_blank"><i class="bi bi-facebook"></i></a>
+          <a href="#" target="_blank"><i class="bi bi-instagram"></i></a>
+          <a href="#" target="_blank"><i class="bi bi-twitter-x"></i></a>
+          <a href="#" target="_blank"><i class="bi bi-linkedin"></i></a>
+        </div>
+      </div>
+
+      <!-- Newsletter -->
+      <div class="footer-section">
+        <h5>Newsletter</h5>
+        <div class="newsletter-form">
+          <input type="email" placeholder="Votre email">
+          <button type="button"><i class="bi bi-send-fill"></i></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Copyright -->
+    <div class="footer-bottom">
+      <p>&copy; {{ currentYear }} VoyageConnect. Tous droits réservés.</p>
+    </div>
+  </div>
+</footer>
+  
+  

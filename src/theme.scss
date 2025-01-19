@@ -1,0 +1,15 @@
+$navbar-bg: #0a1929;  // Bleu foncé
+$navbar-text: #ffffff;  // Blanc
+$accent-color: #ff9800;  // Orange
+
+.navbar {
+  background-color: $navbar-bg !important;
+}
+
+.navbar-brand, .nav-link {
+  color: $navbar-text !important;
+}
+
+.navbar-nav .nav-link.active {
+  color: $accent-color !important;
+} 

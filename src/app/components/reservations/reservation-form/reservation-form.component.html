@@ -1,0 +1,40 @@
+<div class="container mt-4">
+    <h2 class="mb-4">Make a Reservation</h2>
+    <div *ngIf="loading" class="text-center">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+    <div *ngIf="error" class="alert alert-danger" role="alert">
+      {{ error }}
+    </div>
+    <form *ngIf="!loading && !error && destination" [formGroup]="reservationForm" (ngSubmit)="onSubmit()">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0">{{ destination.title }}</h5>
+          <h6 class="mb-0 text-muted">{{ destination.location }}</h6>
+        </div>
+        <div class="card-body">
+          <p><strong>Price per person:</strong> {{ destination.price | currency }}</p>
+          <div class="mb-3">
+            <label for="startDate" class="form-label">Start Date</label>
+            <input type="date" class="form-control" id="startDate" formControlName="startDate">
+          </div>
+          <div class="mb-3">
+            <label for="endDate" class="form-label">End Date</label>
+            <input type="date" class="form-control" id="endDate" formControlName="endDate">
+          </div>
+          <div class="mb-3">
+            <label for="numberOfPeople" class="form-label">Number of People</label>
+            <input type="number" class="form-control" id="numberOfPeople" formControlName="numberOfPeople" min="1">
+          </div>
+        </div>
+        <div class="card-footer">
+          <button type="submit" class="btn btn-primary me-2" [disabled]="reservationForm.invalid">Book Now</button>
+          <a routerLink="/destinations" class="btn btn-secondary">Cancel</a>
+        </div>
+      </div>
+    </form>
+  </div>
+  
+  

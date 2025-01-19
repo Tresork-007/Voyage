@@ -1,0 +1,48 @@
+<div class="container mt-4">
+    <h2 class="mb-4">Payment</h2>
+    <div *ngIf="loading" class="text-center">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+    <div *ngIf="error" class="alert alert-danger" role="alert">
+      {{ error }}
+    </div>
+    <div *ngIf="!loading && !error && reservation">
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="card-title">Reservation Summary</h5>
+          <p><strong>Destination:</strong> {{ reservation.destination.title }}</p>
+          <p><strong>Start Date:</strong> {{ reservation.startDate | date }}</p>
+          <p><strong>End Date:</strong> {{ reservation.endDate | date }}</p>
+          <p><strong>Number of People:</strong> {{ reservation.numberOfPeople }}</p>
+          <p><strong>Total Price:</strong> {{ reservation.totalPrice | currency }}</p>
+        </div>
+      </div>
+      <form [formGroup]="paymentForm" (ngSubmit)="onSubmit()">
+        <div class="mb-3">
+          <label for="cardNumber" class="form-label">Card Number</label>
+          <input type="text" class="form-control" id="cardNumber" formControlName="cardNumber" placeholder="1234 5678 9012 3456">
+        </div>
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label for="expirationDate" class="form-label">Expiration Date</label>
+            <input type="text" class="form-control" id="expirationDate" formControlName="expirationDate" placeholder="MM/YY">
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="cvv" class="form-label">CVV</label>
+            <input type="text" class="form-control" id="cvv" formControlName="cvv" placeholder="123">
+          </div>
+        </div>
+        <div class="mb-3">
+          <label for="cardholderName" class="form-label">Cardholder Name</label>
+          <input type="text" class="form-control" id="cardholderName" formControlName="cardholderName" placeholder="John Doe">
+        </div>
+        <button type="submit" class="btn btn-primary" [disabled]="paymentForm.invalid || loading">
+          {{ loading ? 'Processing...' : 'Pay Now' }}
+        </button>
+      </form>
+    </div>
+  </div>
+  
+  

@@ -1,0 +1,38 @@
+<nav class="navbar navbar-expand-lg">
+  <div class="container">
+    <a class="navbar-brand" routerLink="/">TravelApp</a>
+    
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Accueil</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/destinations" routerLinkActive="active">Destinations</a>
+        </li>
+      </ul>
+
+      <!-- Menu pour utilisateur non connecté -->
+      <div class="d-flex" *ngIf="!isLoggedIn">
+        <a class="btn btn-primary me-2" routerLink="/login">Connexion</a>
+        <a class="btn btn-outline-primary" routerLink="/signup">Inscription</a>
+      </div>
+
+      <!-- Menu pour utilisateur connecté -->
+      <div class="d-flex align-items-center" *ngIf="isLoggedIn">
+        <div class="user-info me-3" *ngIf="currentUser">
+          <div class="user-avatar">
+            {{ currentUser.username?.charAt(0).toUpperCase() }}
+          </div>
+          <span>{{ currentUser.username }}</span>
+        </div>
+        <button class="btn btn-outline-primary" (click)="logout()">Déconnexion</button>
+      </div>
+    </div>
+  </div>
+</nav> 

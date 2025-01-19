@@ -1,0 +1,218 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+.navbar {
+  background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+  padding: 1rem 0;
+  font-family: 'Poppins', sans-serif;
+  
+  .container {
+    max-width: 1400px;
+    padding: 0 2rem;
+  }
+
+  .navbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-right: 3rem;
+    
+    i {
+      font-size: 1.5rem;
+      color: #ffffff;
+    }
+
+    .brand-name {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #ffffff;
+    }
+  }
+
+  .navbar-collapse {
+    flex-grow: 0;
+  }
+
+  .navbar-nav {
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .nav-item {
+    position: relative;
+  }
+
+  .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #ffffff;
+    transition: all 0.3s ease;
+    padding: 0.5rem 1rem;
+
+    i {
+      font-size: 1.2rem;
+    }
+
+    &:hover {
+      color: #fdbb2d;
+      transform: translateY(-2px);
+    }
+  }
+
+  .navbar-toggler {
+    border: 2px solid #ffffff;
+    padding: 0.5rem;
+    
+    &:focus {
+      box-shadow: 0 0 15px rgba(255,255,255,0.5);
+    }
+
+    .navbar-toggler-icon {
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+    }
+  }
+
+  .auth-buttons {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    .btn {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1.2rem;
+      border-radius: 25px;
+      transition: all 0.3s ease;
+      font-weight: 600;
+      white-space: nowrap;
+
+      i {
+        font-size: 1.1rem;
+      }
+    }
+
+    .btn-login {
+      background-color: transparent;
+      border: 2px solid #ffffff;
+      color: #ffffff;
+
+      &:hover {
+        background-color: #ffffff;
+        color: #1a2a6c;
+        transform: translateY(-2px);
+      }
+    }
+
+    .btn-signup {
+      background-color: #fdbb2d;
+      border: 2px solid #fdbb2d;
+      color: #1a2a6c;
+
+      &:hover {
+        background-color: #ffffff;
+        border-color: #ffffff;
+        transform: translateY(-2px);
+      }
+    }
+  }
+}
+
+// Animation pour le menu mobile
+@media (max-width: 991.98px) {
+  .navbar {
+    .container {
+      padding: 0 1rem;
+    }
+
+    .navbar-collapse {
+      background: rgba(0,0,0,0.1);
+      margin-top: 1rem;
+      padding: 1rem;
+      border-radius: 8px;
+      backdrop-filter: blur(10px);
+    }
+
+    .navbar-nav {
+      margin: 1rem 0;
+      text-align: center;
+    }
+
+    .nav-item {
+      margin: 0.5rem 0;
+    }
+
+    .nav-link {
+      justify-content: center;
+    }
+
+    .auth-buttons {
+      flex-direction: row;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 1rem;
+
+      .btn {
+        flex: 1;
+        max-width: 150px;
+        justify-content: center;
+      }
+    }
+  }
+}
+
+// Ajustements pour très petits écrans
+@media (max-width: 375px) {
+  .navbar {
+    .brand-name {
+      font-size: 1.5rem;
+    }
+
+    .auth-buttons {
+      flex-direction: column;
+      
+      .btn {
+        max-width: 100%;
+        margin: 0.25rem 0;
+      }
+    }
+  }
+}
+
+// Animation au chargement
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.navbar {
+  animation: fadeIn 0.5s ease-out;
+}
+
+.navbar {
+  .nav-link, .navbar-brand {
+    cursor: pointer;
+    &:hover {
+      color: #3498db;
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .navbar {
+    .auth-buttons {
+      flex-direction: column;
+      width: 100%;
+
+      .btn {
+        max-width: 100%;
+      }
+    }
+  }
+} 

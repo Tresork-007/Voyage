@@ -1,0 +1,30 @@
+<div class="container mt-4">
+    <div *ngIf="loading" class="text-center">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+    <div *ngIf="error" class="alert alert-danger" role="alert">
+      {{ error }}
+    </div>
+    <div *ngIf="!loading && !error && destination" class="card">
+      <img [src]="destination.imageUrl" class="card-img-top" [alt]="destination.title">
+      <div class="card-body">
+        <h2 class="card-title">{{ destination.title }}</h2>
+        <h6 class="card-subtitle mb-2 text-muted">{{ destination.location }}</h6>
+        <p class="card-text">{{ destination.description }}</p>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item"><strong>Start Date:</strong> {{ destination.startDate | date }}</li>
+          <li class="list-group-item"><strong>End Date:</strong> {{ destination.endDate | date }}</li>
+          <li class="list-group-item"><strong>Price:</strong> {{ destination.price | currency }}</li>
+          <li class="list-group-item"><strong>Type:</strong> {{ destination.type }}</li>
+        </ul>
+      </div>
+      <div class="card-footer">
+        <a routerLink="/reservation" [queryParams]="{destinationId: destination.id}" class="btn btn-primary me-2">Book Now</a>
+        <a routerLink="/destinations" class="btn btn-secondary">Back to Destinations</a>
+      </div>
+    </div>
+  </div>
+  
+  

@@ -1,0 +1,29 @@
+<div class="container mt-4">
+    <h2 class="mb-4">Our Destinations</h2>
+    <div *ngIf="loading" class="text-center">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+    <div *ngIf="error" class="alert alert-danger" role="alert">
+      {{ error }}
+    </div>
+    <div *ngIf="!loading && !error" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+      <div class="col" *ngFor="let destination of destinations">
+        <div class="card h-100">
+          <img [src]="destination.imageUrl" class="card-img-top" [alt]="destination.title">
+          <div class="card-body">
+            <h5 class="card-title">{{ destination.title }}</h5>
+            <p class="card-text">{{ destination.description }}</p>
+            <p><strong>Location:</strong> {{ destination.location }}</p>
+            <p><strong>Price:</strong> {{ destination.price | currency }}</p>
+          </div>
+          <div class="card-footer">
+            <a [routerLink]="['/destinations', destination.id]" class="btn btn-primary">View Details</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  
