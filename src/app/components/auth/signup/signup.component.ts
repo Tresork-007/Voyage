@@ -1,17 +1,17 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
-import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-signup',
   templateUrl: './signup.component.html',
   styleUrls: ['./signup.component.scss']
 })
-export class SignupComponent {
+export class SignupComponent implements OnInit {
   signupForm!: FormGroup;
   loading = false;
+  submitted = false;
   showPassword = false;
   error: string = '';
   success: string = '';
@@ -20,7 +20,9 @@ export class SignupComponent {
     private fb: FormBuilder,
     private authService: AuthService,
     private router: Router
-  ) {
+  ) {}
+
+  ngOnInit() {
     this.initForm();
   }
 
@@ -28,83 +30,67 @@ export class SignupComponent {
     this.signupForm = this.fb.group({
       username: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]]
+      password: ['', [
+        Validators.required,
+        Validators.minLength(6)
+      ]]
     });
   }
 
-  private resetForm(): void {
-    this.signupForm.reset();
-    Object.keys(this.signupForm.controls).forEach(key => {
-      const control = this.signupForm.get(key);
-      control?.setErrors(null);
-    });
-  }
-
-  onSubmit(): void {
-    if (this.signupForm.valid) {
-      this.loading = true;
-      this.error = '';
-      this.success = '';
-      
-      const signupData = {
-        username: this.signupForm.get('username')?.value,
-        email: this.signupForm.get('email')?.value,
-        password: this.signupForm.get('password')?.value
-      };
-
-      console.log('Données envoyées:', signupData);
-
-      this.authService.signup(signupData).subscribe({
-        next: (response) => {
-          console.log('Réponse succès:', response);
-          this.loading = false;
-          this.success = 'Inscription réussie ! Redirection vers la page de connexion...';
-          this.resetForm();
-          setTimeout(() => {
-            this.router.navigate(['/login']);
-          }, 2000);
-        },
-        error: (error: HttpErrorResponse) => {
-          console.log('Erreur complète:', error);
-          this.loading = false;
-          
-          if (error.error === 'OK' || error.status === 200) {
-            this.success = 'Inscription réussie ! Redirection vers la page de connexion...';
-            this.resetForm();
-            setTimeout(() => {
-              this.router.navigate(['/login']);
-            }, 2000);
-          } else {
-            if (error.status === 400) {
-              if (error.error?.message) {
-                this.error = error.error.message;
-              } else if (error.error?.email) {
-                this.error = 'Cet email est déjà utilisé';
-              } else if (error.error?.username) {
-                this.error = 'Ce nom d\'utilisateur est déjà utilisé';
-              } else {
-                this.error = 'Les données fournies sont invalides';
-              }
-            } else if (error.status === 409) {
-              this.error = 'Cet utilisateur existe déjà';
-            } else if (error.status === 0) {
-              this.error = 'Impossible de contacter le serveur';
-            } else {
-              this.error = 'Une erreur est survenue lors de l\'inscription';
-            }
-            console.error('Erreur d\'inscription:', {
-              status: error.status,
-              message: error.message,
-              error: error.error
-            });
-          }
-        }
-      });
-    }
+  get f() {
+    return this.signupForm.controls;
   }
 
   togglePasswordVisibility(): void {
     this.showPassword = !this.showPassword;
   }
-}
 
+  onSubmit(): void {
+    this.submitted = true;
+    this.error = '';
+    this.success = '';
+
+    if (this.signupForm.invalid) {
+      return;
+    }
+
+    this.loading = true;
+
+    const userData = {
+      username: this.f['username'].value,
+      email: this.f['email'].value,
+      password: this.f['password'].value
+    };
+
+    this.authService.signup(userData).subscribe({
+      next: (response) => {
+        this.loading = false;
+        this.success = 'Inscription réussie ! Redirection vers la connexion...';
+        
+        // Attendre que l'utilisateur voie le message de succès
+        setTimeout(() => {
+          this.router.navigate(['/login'], { 
+            queryParams: { 
+              registered: 'success',
+              email: userData.email 
+            }
+          });
+        }, 2000);
+      },
+      error: (error) => {
+        this.loading = false;
+        console.error('Signup error:', error);
+
+        if (error.status === 409) {
+          this.error = 'Cet email ou nom d\'utilisateur est déjà utilisé';
+        } else if (error.status === 400) {
+          this.error = 'Données invalides. Veuillez vérifier vos informations';
+        } else if (error.status === 0) {
+          this.error = 'Impossible de contacter le serveur. Veuillez vérifier votre connexion internet';
+        } else {
+          this.error = 'Une erreur est survenue lors de l\'inscription. Veuillez réessayer plus tard';
+        }
+      }
+    });
+  }
+}

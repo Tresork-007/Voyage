@@ -1,23 +1,28 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, of } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
-import { User } from '../models/user.model';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Observable, throwError, BehaviorSubject } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
+import { User } from '../models/user.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+  private apiUrl = environment.apiUrl;
   private currentUserSubject: BehaviorSubject<User | null>;
   public currentUser: Observable<User | null>;
-  private apiUrl = environment.apiUrl;
+  private tokenKey = 'auth_token';
+  private userKey = 'current_user';
 
   constructor(private http: HttpClient) {
-    this.currentUserSubject = new BehaviorSubject<User | null>(
-      JSON.parse(localStorage.getItem('currentUser') || 'null')
-    );
+    const savedUser = localStorage.getItem(this.userKey);
+    this.currentUserSubject = new BehaviorSubject<User | null>(savedUser ? JSON.parse(savedUser) : null);
     this.currentUser = this.currentUserSubject.asObservable();
+  }
+
+  public get currentUserValue(): User | null {
+    return this.currentUserSubject.value;
   }
 
   signup(userData: { username: string; email: string; password: string }): Observable<any> {
@@ -29,81 +34,95 @@ export class AuthService {
           }
           return response;
         }),
-        catchError(error => {
-          if (error.error === 'OK') {
-            return of({ success: true, message: 'Inscription réussie' });
-          }
-          throw error;
-        })
+        catchError(this.handleError)
       );
   }
 
-  login(username: string, password: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/auth/login`, { username, password }, { responseType: 'text' })
+  login(email: string, password: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/auth/login`, { email, password }, { responseType: 'text' })
       .pipe(
         map(response => {
-          if (response) {
-            try {
-              const user = JSON.parse(response);
-              if (user.token) {
-                localStorage.setItem('token', user.token);
-                localStorage.setItem('currentUser', JSON.stringify(user));
-                this.currentUserSubject.next(user);
-              }
-              return user;
-            } catch {
-              // Si la réponse n'est pas du JSON valide
-              if (response === 'OK') {
-                return { success: true, message: 'Connexion réussie' };
-              }
+          try {
+            const jsonResponse = JSON.parse(response);
+            if (jsonResponse.token) {
+              this.setAuthToken(jsonResponse.token);
+              this.setCurrentUser(jsonResponse);
+              return jsonResponse;
+            }
+          } catch {
+            // Si la réponse n'est pas du JSON valide mais est 'OK'
+            if (response === 'OK') {
+              return { success: true, message: 'Connexion réussie' };
             }
           }
           return response;
         }),
-        catchError(error => {
-          if (error.error === 'OK') {
-            return of({ success: true, message: 'Connexion réussie' });
-          }
-          throw error;
-        })
+        catchError(this.handleError)
       );
   }
 
-  logout(): Observable<any> {
-    return this.http.post(`${this.apiUrl}/auth/logout`, {})
-      .pipe(
-        map(() => {
-          localStorage.removeItem('currentUser');
-          localStorage.removeItem('token');
-          this.currentUserSubject.next(null);
-        })
-      );
+  logout(): void {
+    localStorage.removeItem(this.tokenKey);
+    localStorage.removeItem(this.userKey);
+    this.currentUserSubject.next(null);
   }
 
-  public get currentUserValue(): User | null {
-    return this.currentUserSubject.value;
+  setAuthToken(token: string): void {
+    localStorage.setItem(this.tokenKey, token);
   }
 
-  verifyToken(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/auth/verify`);
+  getAuthToken(): string | null {
+    return localStorage.getItem(this.tokenKey);
   }
 
-  setToken(token: string): void {
-    localStorage.setItem('token', token);
-  }
-
-  getToken(): string | null {
-    return localStorage.getItem('token');
-  }
-
-  removeToken(): void {
-    localStorage.removeItem('token');
+  setCurrentUser(user: User): void {
+    localStorage.setItem(this.userKey, JSON.stringify(user));
+    this.currentUserSubject.next(user);
   }
 
   isLoggedIn(): boolean {
-    const token = this.getToken();
-    const currentUser = this.currentUserValue;
-    return !!(token && currentUser);
+    return !!this.getAuthToken() && !!this.currentUserValue;
+  }
+
+  private handleError(error: HttpErrorResponse) {
+    let errorMessage = 'Une erreur est survenue';
+
+    if (error.error instanceof ErrorEvent) {
+      // Erreur côté client
+      errorMessage = error.error.message;
+    } else {
+      // Erreur côté serveur
+      switch (error.status) {
+        case 400:
+          errorMessage = 'Données invalides';
+          break;
+        case 401:
+          errorMessage = 'Non autorisé';
+          break;
+        case 403:
+          errorMessage = 'Accès refusé';
+          break;
+        case 404:
+          errorMessage = 'Ressource non trouvée';
+          break;
+        case 409:
+          errorMessage = 'Cet email ou nom d\'utilisateur est déjà utilisé';
+          break;
+        case 429:
+          errorMessage = 'Trop de tentatives, veuillez réessayer plus tard';
+          break;
+        case 500:
+          errorMessage = 'Erreur serveur';
+          break;
+        default:
+          errorMessage = 'Une erreur est survenue';
+      }
+    }
+
+    return throwError(() => ({ 
+      status: error.status, 
+      message: errorMessage,
+      error: error.error
+    }));
   }
 }
-
